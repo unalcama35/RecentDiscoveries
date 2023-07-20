@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { SpotifyService } from 'src/app/spotify.service';
+import { DomSanitizer, SafeResourceUrl, SafeUrl} from '@angular/platform-browser';
+
+
 
 @Component({
   selector: 'app-generate',
@@ -7,9 +11,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GenerateComponent implements OnInit {
 
-  constructor() { }
+  all: any;
+
+  constructor(private api: SpotifyService, readonly domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
+    this.api.login().then(() => {
+      this.getSongs();
+    }).catch(error => {
+      console.error('Login failed:', error);
+    });
+  }
+
+  getSongs(): void{
+    this.api.getRecents().subscribe(songs=>{
+      this.all = songs;
+      console.log(this.all)
+    })
+
   }
 
 }
