@@ -17,8 +17,8 @@
         private readonly DataContext context;
         private readonly IMemoryCache memoryCache;
 
-        private readonly string clientID = "AddClientID";
-        private readonly string clientSecret = "AddClientSecret";
+        private readonly string clientID = "-";
+        private readonly string clientSecret = "-";
         private readonly Uri redirectUri = new Uri("https://localhost:7214/api/song/callback");
 
         public SpotifyService(DataContext context, IMemoryCache memoryCache)

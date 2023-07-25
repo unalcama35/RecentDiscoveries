@@ -21,6 +21,7 @@ namespace SpotiAPI
             builder.Services.AddScoped<SongService>();
             builder.Services.AddScoped <SpotifyService>();
             builder.Services.AddScoped<LoginService>();
+            builder.Services.AddScoped<TokenService>();
             builder.Services.AddMemoryCache();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

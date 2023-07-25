@@ -21,14 +21,16 @@ namespace SpotiAPI.Controllers
         private readonly SongService songService;
         private readonly SpotifyService spotifyService;
         private readonly LoginService loginService;
+        private readonly TokenService tokenService;
        
     //  private readonly IMemoryCache memoryCache;
-        public SongController(DataContext context, SongService songService, SpotifyService spotifyService, LoginService loginService)
+        public SongController(DataContext context, SongService songService, SpotifyService spotifyService, LoginService loginService, TokenService tokenService)
         {
             this.context = context;
             this.songService = songService;
             this.spotifyService = spotifyService;
             this.loginService = loginService;
+            this.tokenService = tokenService;
       //      this.memoryCache = memoryCache; 
         }
 
@@ -167,12 +169,37 @@ namespace SpotiAPI.Controllers
         }
 
         [HttpPost("AppLogin")]
-        public ActionResult<string> AppLogin(LoginDts log)
+        public async Task<ActionResult<string>> AppLogin(LoginDts log)
         {
             string username = log.LoginName;
-            string password = log.Password;
 
-            return Ok("Log in verified");
+            var verified = await this.loginService.Verify(log);
+            if (verified)
+                return tokenService.GenerateToken(username);
+            else
+                return "Account not found.";
+
+            
+        }
+
+        [HttpPost("AppRegister")]
+        public async Task<ActionResult<List<User>>> AppRegister(User user)
+        {
+            var response = await this.loginService.Register(user);
+
+            return response;
+            
+        }
+
+        [HttpPost("AppValidate")]
+        public async Task<ActionResult<string>> AppValidate(string token)
+        {
+            var response = this.tokenService.ValidateToken(token);
+            if (response != null)
+                return response.Identity.Name;
+            else
+                return ("Token Invalid");
+
         }
 
 
