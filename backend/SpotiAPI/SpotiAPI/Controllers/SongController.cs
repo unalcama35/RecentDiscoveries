@@ -3,22 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using SpotiAPI.Models;
 using SpotiAPI.Services;
 
-using SpotifyAPI.Web;
-using SpotifyAPI.Web.Auth;
-using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-
-using System.Diagnostics;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -36,15 +20,22 @@ namespace SpotiAPI.Controllers
         private readonly DataContext context;
         private readonly SongService songService;
         private readonly SpotifyService spotifyService;
+        private readonly LoginService loginService;
+       
     //  private readonly IMemoryCache memoryCache;
-        public SongController(DataContext context, SongService songService, SpotifyService spotifyService)
+        public SongController(DataContext context, SongService songService, SpotifyService spotifyService, LoginService loginService)
         {
             this.context = context;
             this.songService = songService;
             this.spotifyService = spotifyService;
+            this.loginService = loginService;
       //      this.memoryCache = memoryCache; 
         }
 
+
+
+
+        //Database Part
 
         [HttpGet]
         public async Task<ActionResult<List<Song>>> Get()
@@ -123,6 +114,11 @@ namespace SpotiAPI.Controllers
             }
         }
 
+
+
+        //Spotify Part
+
+
         [HttpGet("callback")]
         public async Task<ActionResult<string>> GetSpoti()
         {
@@ -132,9 +128,9 @@ namespace SpotiAPI.Controllers
 
            var accessToken = await spotifyService.GenerateToken(authorCode);
 
-            return Content("<script>window.close();</script>", "text/html");
+           return Content("<script>window.close();</script>", "text/html");
 
-            return Ok("Token Acquired");
+           return Ok("Token Acquired");
 
 
         }
@@ -145,7 +141,20 @@ namespace SpotiAPI.Controllers
 
             var items = await spotifyService.GetRecentsAsync();
             await songService.DeleteAllSongs();
-            var songs = await songService.AddSongsOfItems(items);
+            JToken[] tracks = items.Select(item => item["track"]).ToArray();
+            var songs = await songService.AddSongsOfItems(tracks);
+            return Ok(songs);
+        }
+
+        [HttpGet("TopTracks")]
+        public async Task<ActionResult<string>> GetTopTracks()
+        {
+            var items = await spotifyService.GetLongTermSongs();
+         //   return items.ToString();
+            await songService.DeleteAllSongs();
+           // JToken[] tracks = items.Select(item => item["TrackObject"]).ToArray();
+
+            var songs = await songService.AddSongsOfItems(items.ToArray());
             return Ok(songs);
         }
 
@@ -155,6 +164,15 @@ namespace SpotiAPI.Controllers
            spotifyService.LoginAsync();
            return Ok("Logged In");
 
+        }
+
+        [HttpPost("AppLogin")]
+        public ActionResult<string> AppLogin(LoginDts log)
+        {
+            string username = log.LoginName;
+            string password = log.Password;
+
+            return Ok("Log in verified");
         }
 
 

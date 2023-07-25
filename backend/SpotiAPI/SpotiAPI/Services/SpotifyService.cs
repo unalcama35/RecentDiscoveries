@@ -17,8 +17,8 @@
         private readonly DataContext context;
         private readonly IMemoryCache memoryCache;
 
-        private readonly string clientID = "";
-        private readonly string clientSecret = "";
+        private readonly string clientID = "AddClientID";
+        private readonly string clientSecret = "AddClientSecret";
         private readonly Uri redirectUri = new Uri("https://localhost:7214/api/song/callback");
 
         public SpotifyService(DataContext context, IMemoryCache memoryCache)
@@ -38,9 +38,6 @@
                 Scope = scopes
             };
             BrowserUtil.Open(loginRequest.ToUri());
-
-
-
         }
 
         public async Task<string> GenerateToken(string authorizationCode)
@@ -49,24 +46,12 @@
             var res = await new OAuthClient().RequestToken(tokenRequest);
             var accessToken = res.AccessToken;
             memoryCache.Set("AccessToken", accessToken);
-
             return accessToken;
-
         }
 
         public async Task<JToken> GetRecentsAsync()
         {
-            if (!memoryCache.TryGetValue("AccessToken", out string accessToken))
-            {
-                throw new Exception("Access token not found.");
-            }
-
-
-            var httpClient = new HttpClient();
-            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-            var url = $"https://api.spotify.com/v1/me/tracks";
-            var response = await httpClient.GetAsync(url);
-
+            var response = await GetResponse($"https://api.spotify.com/v1/me/tracks");
             if (response.IsSuccessStatusCode)
             {
                 var responseBody = await response.Content.ReadAsStringAsync();
@@ -79,6 +64,35 @@
             {
                 throw new Exception($"Failed to retrieve saved tracks. StatusCode: {response.StatusCode}");
             }
+        }
+
+        public async Task<JToken> GetLongTermSongs()
+        {
+            var response = await GetResponse($"https://api.spotify.com/v1/me/top/tracks");
+            if (response.IsSuccessStatusCode)
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
+                var json = JObject.Parse(responseBody);
+                var items = json["items"];
+                return items;
+            }
+            else
+            {
+                throw new Exception($"Failed to retrieve top tracks. StatusCode: {response.StatusCode}");
+            }
+        }
+
+        private async Task<HttpResponseMessage> GetResponse(String url)
+        {
+            if (!memoryCache.TryGetValue("AccessToken", out string accessToken))
+            {
+                throw new Exception("Access token not found.");
+            }
+            var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            var response = await httpClient.GetAsync(url);
+            return response;
+
         }
 
 

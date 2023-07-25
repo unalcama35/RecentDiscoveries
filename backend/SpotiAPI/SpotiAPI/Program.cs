@@ -20,10 +20,12 @@ namespace SpotiAPI
             });
             builder.Services.AddScoped<SongService>();
             builder.Services.AddScoped <SpotifyService>();
+            builder.Services.AddScoped<LoginService>();
             builder.Services.AddMemoryCache();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
 
             var app = builder.Build();
 
@@ -31,13 +33,13 @@ namespace SpotiAPI
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(); // Swaggerin ne gibi bir faydasi var.
             }
 
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()); //CORSun diger hallerini arastir, ne tipte kisitlamalar yapabiliyorum.
 
 
 

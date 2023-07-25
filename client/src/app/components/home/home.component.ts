@@ -18,4 +18,8 @@ export class HomeComponent implements OnInit {
   redirectToGenerate() {
     this.router.navigate(['/generate']);
   }
+
+  redirectToTopSongs() {
+    this.router.navigate(['/topsongs'])
+  }
 }

@@ -6,12 +6,14 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { GenerateComponent } from './components/generate/generate.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TopSongsComponent } from './components/top-songs/top-songs.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    GenerateComponent
+    GenerateComponent,
+    TopSongsComponent
   ],
   imports: [
     BrowserModule,

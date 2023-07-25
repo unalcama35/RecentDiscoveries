@@ -34,15 +34,15 @@ namespace SpotiAPI.Services
 
         }
 
-        public async Task<List<Song>> AddSongsOfItems(JToken items)
+        public async Task<List<Song>> AddSongsOfItems(JToken[] items)
         {
             foreach (var item in items)
             {
-                var name = item["track"]["name"].ToString();
-                var artist = item["track"]["artists"][0]["name"].ToString();
-                var album = item["track"]["album"]["name"].ToString();
-                var trackUrl = item["track"]["external_urls"]["spotify"].ToString();
-                var imageUrl = item["track"]["album"]["images"][0]["url"].ToString();
+                var name = item["name"].ToString();
+                var artist = item["artists"][0]["name"].ToString();
+                var album = item["album"]["name"].ToString();
+                var trackUrl = item["external_urls"]["spotify"].ToString();
+                var imageUrl = item["album"]["images"][0]["url"].ToString();
 
                 await AddSong(new Song
                 {

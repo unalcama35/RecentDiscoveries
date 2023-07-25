@@ -20,11 +20,23 @@ export class SpotifyService {
     .pipe(map(data => data));
   }
 
-  login(): Promise<void> {
-    this.http
-    .get<any[]>(this.api_url+'/Login')
+  getTopTracks(){
+    return this.http
+    .get<any[]>(this.api_url+'/TopTracks')
     .pipe(map(data => data));
-    return Promise.resolve();
-    
+  }
+
+  login(): Promise<void> {
+    return Promise.resolve(); // don't use login for now 07/23/2023
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post<any>(`${this.api_url}/Login`, {}, { headers: headers })
+      .toPromise() 
+      .then(data => {
+        console.log('Logged In');
+      })
+      .catch(error => {
+        console.error('Error occurred while logging in:', error);
+      });
   }
 }
