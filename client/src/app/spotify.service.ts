@@ -39,4 +39,10 @@ export class SpotifyService {
         console.error('Error occurred while logging in:', error);
       });
   }
+
+  appLogin(username:string, password:string){
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+
+    return this.http.post<any>(`${this.api_url}/AppLogin`, {"loginName": username,"password": password}, { headers: headers })
+  }
 }

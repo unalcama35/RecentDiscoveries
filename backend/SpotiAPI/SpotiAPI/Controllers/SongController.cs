@@ -169,15 +169,16 @@ namespace SpotiAPI.Controllers
         }
 
         [HttpPost("AppLogin")]
-        public async Task<ActionResult<string>> AppLogin(LoginDts log)
+        public async Task<ActionResult<Object>> AppLogin(LoginDts log)
         {
             string username = log.LoginName;
 
             var verified = await this.loginService.Verify(log);
-            if (verified)
-                return tokenService.GenerateToken(username);
+            if (verified) { 
+                return new { message = tokenService.GenerateToken(username) }; 
+            }
             else
-                return "Account not found.";
+                return new { message = "Account not found." };
 
             
         }
