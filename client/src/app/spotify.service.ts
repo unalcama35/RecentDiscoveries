@@ -23,7 +23,7 @@ export class SpotifyService {
   getTopTracks(){
     return this.http
     .get<any[]>(this.api_url+'/TopTracks')
-    .pipe(map(data => data));
+    .pip
   }
 
   login(): Promise<void> {
