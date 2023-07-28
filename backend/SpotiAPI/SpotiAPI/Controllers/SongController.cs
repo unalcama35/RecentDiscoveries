@@ -138,25 +138,32 @@ namespace SpotiAPI.Controllers
         }
 
         [HttpGet("RecentLiked")]
-        public async Task<ActionResult<string>> GetRecents()
+        public async Task<ActionResult<string>> GetRecents([FromQuery] string userToken)
         {
-
+            
             var items = await spotifyService.GetRecentsAsync();
-            await songService.DeleteAllSongs();
             JToken[] tracks = items.Select(item => item["track"]).ToArray();
-            var songs = await songService.AddSongsOfItems(tracks);
+            var usersname = tokenService.ValidateToken(userToken).Identity.Name;
+            var userID = await loginService.GetIDAsync(usersname);
+
+            await songService.DeleteAllSongsOfUser(userID);
+
+            var songs = await songService.AddSongsOfItems(tracks, userID);
             return Ok(songs);
         }
 
         [HttpGet("TopTracks")]
-        public async Task<ActionResult<string>> GetTopTracks()
+        public async Task<ActionResult<string>> GetTopTracks([FromQuery] string userToken)
         {
             var items = await spotifyService.GetLongTermSongs();
          //   return items.ToString();
-            await songService.DeleteAllSongs();
-           // JToken[] tracks = items.Select(item => item["TrackObject"]).ToArray();
+            // JToken[] tracks = items.Select(item => item["TrackObject"]).ToArray();
+            var usersname = tokenService.ValidateToken(userToken).Identity.Name;
+            var userID = await loginService.GetIDAsync(usersname);
 
-            var songs = await songService.AddSongsOfItems(items.ToArray());
+            await songService.DeleteAllSongsOfUser(userID);
+
+            var songs = await songService.AddSongsOfItems(items.ToArray(), userID);
             return Ok(songs);
         }
 
@@ -169,23 +176,28 @@ namespace SpotiAPI.Controllers
         }
 
         [HttpPost("AppLogin")]
-        public async Task<ActionResult<Object>> AppLogin(LoginDts log)
+        public async Task<ActionResult> AppLogin(LoginDts log)
         {
             string username = log.LoginName;
 
             var verified = await this.loginService.Verify(log);
-            if (verified) { 
-                return new { message = tokenService.GenerateToken(username) }; 
+            if (verified) {
+                await spotifyService.LoginAsync();
+
+                var profileurl = await spotifyService.GetProfilePic();
+                return Ok(new { message = tokenService.GenerateToken(username), profilepic = profileurl }); 
             }
             else
-                return new { message = "Account not found." };
+                return Ok(new { message = "Account not found." });
 
             
         }
 
+
         [HttpPost("AppRegister")]
         public async Task<ActionResult<List<User>>> AppRegister(User user)
         {
+
             var response = await this.loginService.Register(user);
 
             return response;
@@ -202,6 +214,7 @@ namespace SpotiAPI.Controllers
                 return ("Token Invalid");
 
         }
+        
 
 
 

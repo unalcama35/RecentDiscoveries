@@ -15,11 +15,7 @@ export class TopSongsComponent implements OnInit {
   constructor(private api: SpotifyService, readonly domSanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.api.login().then(() => {
-      this.getSongs();
-    }).catch(error => {
-      console.error('Login failed:', error);
-    });
+    this.getSongs();
   }
 
   getSongs(): void{

@@ -1,4 +1,4 @@
-<h1 style="margin:10px">Top Songs</h1>
+<h1 style="margin:20px">Top Songs</h1>
 
   
   <div *ngIf="(undefined === all)" style="padding: 15px;">
@@ -20,13 +20,15 @@
 
         <div class="d-flex align-items-center">
             <img [src]="song.song_Pic" class="card-img" style="margin-left: 0px; height: 140px; width: 140px; margin-top: 5px;">
-            <h2 style="margin-left: 10px;">{{song.name}}</h2>
+            <div>
+              <h2 style="margin-left: 10px;">{{song.name}}</h2>
+            </div>
           </div>
         </a>
       <div class="card-body d-flex flex-column ">
         
-        <h3 class="card-subtitle">{{song.album}}</h3>
-        <h3 class="card-subtitle" style="color:gray">@{{song.artist}}</h3>
+        <h3 class="card-subtitle ms-auto">{{song.album}}</h3>
+        <h3 class="card-subtitle ms-auto" style="color:gray">@{{song.artist}}</h3>
 
         <!-- <p class="card-text">{{tweets.full_text}}</p> -->
         <a [href]="song.song_Id" target="_blank"

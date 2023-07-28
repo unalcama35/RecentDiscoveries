@@ -34,7 +34,7 @@ namespace SpotiAPI.Services
 
         }
 
-        public async Task<List<Song>> AddSongsOfItems(JToken[] items)
+        public async Task<List<SongVM>> AddSongsOfItems(JToken[] items, int userID)
         {
             foreach (var item in items)
             {
@@ -51,12 +51,32 @@ namespace SpotiAPI.Services
                     Artist = artist,
                     Album = album,
                     Song_Id = trackUrl,
-                    Song_Pic = imageUrl
+                    Song_Pic = imageUrl,
+                    UserID = userID
                 });
             }
 
-            return await this.context.Songs.ToListAsync();
+            var songs = await this.context.Songs
+                            .Where(song => song.UserID == userID)
+                            .ToListAsync();
+            return createVM(songs);
+            
 
+        }
+        private List<SongVM> createVM(List<Song> songs)
+        {
+            List<SongVM> songList = new List<SongVM>();
+            foreach (var song in songs)
+            {
+                var name = song.Name;
+                var artist = song.Artist;
+                var album = song.Album;
+                var trackUrl = song.Song_Id;
+                var imageUrl = song.Song_Pic;
+
+                songList.Add(new SongVM(name, artist, album, trackUrl, imageUrl));
+            }
+            return songList;
         }
 
         public async Task UpdateSongAsync(Song song)
@@ -94,6 +114,16 @@ namespace SpotiAPI.Services
                 this.context.Songs.Remove(song);
             }
             await this.context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAllSongsOfUser(int userID)
+        {
+            var songsToDelete = await context.Songs
+                .Where(song => song.UserID == userID)
+                .ToListAsync();
+
+            context.Songs.RemoveRange(songsToDelete);
+            await context.SaveChangesAsync();
         }
 
     }

@@ -2,17 +2,21 @@
   <nav class="navbar navbar-expand navbar-dark fixed-top bg-dark">
     <div class="container-fluid">
 
-
       <a class="navbar-brand" routerLink="/home">
         Home
       </a>
       
-      <ul class="navbar-nav me-auto mb-2 mb-md-0">
+      <ul class="navbar-nav d-flex me-auto mb-2 mb-md-0">
         <li class="nav-item">
           <a routerLink="/home" > <img  src="https://www.pngkit.com/png/full/190-1908258_contact-high-resolution-spotify-logo.png" alt="" width="40" height="51.76"></a>
         </li>
+      </ul>
+      <ul class="navbar-nav d-flex ms-auto mb-2 mb-md-0">
+        <li class="nav-item">
+          <a routerLink="/login" *ngIf="this.navServ.getProfilePic()"> <img  src={{this.navServ.getProfilePic()}} alt="" width="47" height="51.76"></a>
+        </li>
         <li class="nav-item" style="margin: 5%;">
-          <a class="nav-link active"  routerLink="/login">Login</a>
+          <a class="nav-link active"  routerLink="/login">{{this.navServ.getNavText()}}</a>
         </li>
       </ul>
     </div>
@@ -20,5 +24,6 @@
   </nav>
 </header>
 <body >
-  <router-outlet></router-outlet>
+  <router-outlet *ngIf="this.navServ.getLogged()"></router-outlet>
+  <app-login *ngIf="!this.navServ.getLogged()"></app-login>
 </body>

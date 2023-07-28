@@ -18,10 +18,29 @@ namespace SpotiAPI.Services
         {
             User user = await this.context.Users.FirstOrDefaultAsync(u => u.Username == log.LoginName);
             if (user != null)
-                return (user.Password == log.Password);
+                if(user.Password == log.Password)
+                    return await UpdateLastLogin(user);
+
          
             return false;
 
+        }
+
+        private async Task<bool> UpdateLastLogin(User user)
+        {
+                user.LastLogin = DateTime.Now;
+
+                await this.context.SaveChangesAsync();
+
+                return true;
+            
+        }
+
+        public async Task<int> GetIDAsync(String username)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Username == username);
+
+            return user.Id;
         }
 
         public async Task<ActionResult<List<User>>> Register(User user)

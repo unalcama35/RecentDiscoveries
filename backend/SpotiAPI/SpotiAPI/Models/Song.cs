@@ -8,5 +8,7 @@
         public string Album { get; set; }
         public string Song_Id { get; set; }
         public string Song_Pic { get; set; }
+        public int UserID { get; set; }
+        
     }
 }
