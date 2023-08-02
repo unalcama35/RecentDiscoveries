@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { SpotifyService } from 'src/app/spotify.service';
 
 @Component({
   selector: 'app-home',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private spotifyService: SpotifyService) { }
 
   ngOnInit(): void {
   }
@@ -21,5 +22,9 @@ export class HomeComponent implements OnInit {
 
   redirectToTopSongs() {
     this.router.navigate(['/topsongs'])
+  }
+
+  sendEmail() {
+    console.log(this.spotifyService.emailSongs().subscribe());
   }
 }

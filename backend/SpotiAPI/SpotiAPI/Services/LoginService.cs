@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using SpotiAPI.Models;
 using System.IdentityModel.Tokens.Jwt;
+using BCrypt.Net;
 
 namespace SpotiAPI.Services
 {
@@ -18,7 +19,7 @@ namespace SpotiAPI.Services
         {
             User user = await this.context.Users.FirstOrDefaultAsync(u => u.Username == log.LoginName);
             if (user != null)
-                if(user.Password == log.Password)
+                if( VerifyEncryptedPassword(log.Password, user.Password))
                     return await UpdateLastLogin(user);
 
          
@@ -43,10 +44,17 @@ namespace SpotiAPI.Services
             return user.Id;
         }
 
+        public async Task<string> GetEmailAsync(int Id)
+        {
+            var user = await context.Users.FindAsync(Id);
+
+            return user.Email;
+        }
         public async Task<ActionResult<List<User>>> Register(User user)
         {
             try
             {
+                user.Password = Encrypt(user.Password);
                 this.context.Users.Add(user);
                 await this.context.SaveChangesAsync();
                 return await GetAllUsersAsync();
@@ -66,6 +74,17 @@ namespace SpotiAPI.Services
         {
             return await this.context.Users.ToListAsync();
 
+        }
+
+        private string Encrypt(string password)
+        {
+            return BCrypt.Net.BCrypt.HashPassword(password);
+        }
+
+        private bool VerifyEncryptedPassword(string password, string hashedPassword)
+        {
+
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
 
 

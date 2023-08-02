@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "J5pByEsz2iyhTJhbnHrea1RpaLKy0HnFOMHfxgHThinUF8FQjdi/Rsq36KNX3OsYJEaWPVxWBgxBFWFN1HofEw==",
+  "dgSpecHash": "jBNwBrlZZIGDpTvWEWCNVl9r3QqPbd0UIITErkMLYgha86rW+tP3qssbOCFcPaReALJjesacYHexPtb2XIuuJQ==",
   "success": true,
   "projectFilePath": "D:\\Coding\\RecentDiscoveries\\backend\\SpotiAPI\\SpotiAPI\\SpotiAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\HP\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
+    "C:\\Users\\HP\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\embedio\\3.5.2\\embedio.3.5.2.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\HP\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",

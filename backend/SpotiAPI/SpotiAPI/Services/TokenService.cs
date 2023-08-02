@@ -12,7 +12,7 @@ public class TokenService
 
     public TokenService()
     {
-        this.secretKey = "-";
+        this.secretKey = "";
         this.issuer = "unalsjwt";
         this.audience = "discoverapp";
     }

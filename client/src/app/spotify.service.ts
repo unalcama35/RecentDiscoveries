@@ -60,5 +60,17 @@ export class SpotifyService {
     return this.http.post<any>(`${this.api_url}/AppRegister`, requestBody, { headers: headers })
   }
 
+  emailSongs(){
+    var authString = this.cookieService.get('authToken');
+
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    const payload = {
+      authToken: authString
+    };    
+    return this.http.post<any>(`${this.api_url}/EmailSongs/?authToken=${authString}`, { headers: headers })
+
+
+  }
+
 
 }

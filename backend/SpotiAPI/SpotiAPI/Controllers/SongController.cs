@@ -5,8 +5,7 @@ using SpotiAPI.Services;
 
 using Newtonsoft.Json.Linq;
 using Microsoft.Extensions.Caching.Memory;
-
-
+using System.Text;
 
 namespace SpotiAPI.Controllers
 {
@@ -22,15 +21,17 @@ namespace SpotiAPI.Controllers
         private readonly SpotifyService spotifyService;
         private readonly LoginService loginService;
         private readonly TokenService tokenService;
+        private readonly EmailService emailService;
        
     //  private readonly IMemoryCache memoryCache;
-        public SongController(DataContext context, SongService songService, SpotifyService spotifyService, LoginService loginService, TokenService tokenService)
+        public SongController(DataContext context, SongService songService, SpotifyService spotifyService, LoginService loginService, TokenService tokenService, EmailService emailService)
         {
             this.context = context;
             this.songService = songService;
             this.spotifyService = spotifyService;
             this.loginService = loginService;
             this.tokenService = tokenService;
+            this.emailService = emailService;
       //      this.memoryCache = memoryCache; 
         }
 
@@ -214,7 +215,41 @@ namespace SpotiAPI.Controllers
                 return ("Token Invalid");
 
         }
-        
+
+        [HttpPost("EmailSongs")]
+        public async Task<ActionResult<string>> MailSongs([FromQuery] string authToken)
+        {
+            try
+            {
+               string username = (await this.AppValidate(authToken)).Value;
+               int userID = await this.loginService.GetIDAsync(username);
+               string to = await this.loginService.GetEmailAsync(userID);
+               var songs = await this.songService.GetAllSongsByUserId(userID);
+               await this.emailService.SendEmail(to, "My Spotify Songs", FormatSongs(songs));
+               return "Email sent";
+            }
+            catch (Exception ex)
+            {
+                return (ex.Message + "; Exception occured");
+            }
+        }
+
+        private string FormatSongs(List<SongVM> songs)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (var song in songs)
+            {
+                sb.AppendLine($"Name: {song.Name}");
+                sb.AppendLine($"Artist: {song.Artist}");
+                sb.AppendLine($"Album: {song.Album}");
+                sb.AppendLine($"Song Id: {song.Song_Id}");
+                sb.AppendLine($"Song Pic: {song.Song_Pic}");
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
+
+
 
 
 

@@ -19,8 +19,8 @@
         private readonly DataContext context;
         private readonly IMemoryCache memoryCache;
 
-        private readonly string clientID = "-";
-        private readonly string clientSecret = "-";
+        private readonly string clientID = "";
+        private readonly string clientSecret = "";
         private readonly Uri redirectUri = new Uri("https://localhost:7214/api/song/callback");
 
         public SpotifyService(DataContext context, IMemoryCache memoryCache)
@@ -32,7 +32,7 @@
 
         public async Task<string> LoginAsync()
         {
-            var scopes = new List<string> { Scopes.UserTopRead, Scopes.UserLibraryRead, Scopes.UserFollowRead };
+            var scopes = new List<string> { Scopes.UserTopRead, Scopes.UserLibraryRead};
             var server = new EmbedIOAuthServer(redirectUri, 5543);
             await server.Start();
             var loginRequest = new LoginRequest(redirectUri, clientID, LoginRequest.ResponseType.Code)

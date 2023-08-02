@@ -85,3 +85,4 @@ D:\Coding\RecentDiscoveries\backend\SpotiAPI\SpotiAPI\bin\Debug\net6.0\Newtonsof
 D:\Coding\RecentDiscoveries\backend\SpotiAPI\SpotiAPI\bin\Debug\net6.0\SpotifyAPI.Web.dll
 D:\Coding\RecentDiscoveries\backend\SpotiAPI\SpotiAPI\bin\Debug\net6.0\SpotifyAPI.Web.Auth.dll
 D:\Coding\RecentDiscoveries\backend\SpotiAPI\SpotiAPI\bin\Debug\net6.0\Swan.Lite.dll
+D:\Coding\RecentDiscoveries\backend\SpotiAPI\SpotiAPI\bin\Debug\net6.0\BCrypt.Net-Next.dll

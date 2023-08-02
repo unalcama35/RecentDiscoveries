@@ -17,6 +17,13 @@ namespace SpotiAPI.Services
             return await this.context.Songs.ToListAsync();
 
         }
+        public async Task<List<SongVM>> GetAllSongsByUserId(int userID)
+        {
+            var songs = await this.context.Songs
+                            .Where(song => song.UserID == userID)
+                            .ToListAsync();
+            return createVM(songs);
+        }
 
         public async Task<Song> GetSongByIdAsync(int id)
         {

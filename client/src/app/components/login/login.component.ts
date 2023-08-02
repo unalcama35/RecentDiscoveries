@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
   register:boolean = false;
   loggedin:boolean = false;
   navServ:NavbarService;
+  notFound:boolean = false;
 
   onSubmit() {
     if(!this.navbarService.getLogged()){
@@ -34,8 +35,10 @@ export class LoginComponent implements OnInit {
             data => {
               var msg = data.message;
               if(msg == "Account not found."){
-                throw new Error(msg);          
+                this.notFound = true;    
+                throw new Error(msg);  
               }else{
+                this.notFound=false;
                 this.navbarService.setProfilePic(data.profilepic);
                 console.log("Token retrieved");
                 this.cookieService.set('authToken', msg);
